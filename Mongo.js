@@ -7,9 +7,8 @@ if (args.length < 3) {
   process.exit(1)
 }
 
-const password = args[2]
-
-const url = 'mongodb+srv://<USUARIO>:<CONTRASEÑA>@cluster0.njrlr4p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+require('dotenv').config()
+const url = process.env.MONGODB_URI
 
 mongoose.set('strictQuery', false)
 mongoose.connect(url)
