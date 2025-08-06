@@ -62,7 +62,7 @@ app.post('/api/persons', (req, res, next) => {
 
 app.put('/api/persons/:id', (req, res, next) => {
   const { number } = req.body
-
+  console.log('PUT request body:', req.body)
   Person.findByIdAndUpdate(
     req.params.id,
     { number },
@@ -76,8 +76,10 @@ app.put('/api/persons/:id', (req, res, next) => {
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
-  Person.findByIdAndRemove(req.params.id)
-    .then(() => res.status(204).end())
+  Person.findByIdAndDelete(req.params.id)
+    .then(() => {
+      res.status(204).end()
+    })
     .catch(error => next(error))
 })
 
@@ -89,6 +91,7 @@ app.use(unknownEndpoint)
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
