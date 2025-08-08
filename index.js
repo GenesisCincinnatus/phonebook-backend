@@ -10,7 +10,7 @@ require('dotenv').config()
 
 app.use(cors())
 app.use(express.json())
-app.use(express.static('dist'))
+app.use(express.static('build'))
 
 morgan.token('body', (req) => {
   return req.method === 'POST' || req.method === 'PUT' ? JSON.stringify(req.body) : ''
@@ -60,17 +60,20 @@ app.post('/api/persons', (req, res, next) => {
     .catch(error => next(error))
 })
 
-app.put('/api/persons/:id', (req, res, next) => {
-  const { number } = req.body
-  console.log('PUT request body:', req.body)
-  Person.findByIdAndUpdate(
-    req.params.id,
-    { number },
-    { new: true, runValidators: true, context: 'query' }
-  )
-    .then(updatedPerson => {
-      if (updatedPerson) res.json(updatedPerson)
-      else res.status(404).send({ error: 'person not found' })
+app.put('/api/persons/:id', (request, response, next) => {
+  const { name, number } = request.body
+  const updatedPerson = {
+    name,
+    number
+  }
+
+  Person.findByIdAndUpdate(request.params.id, updatedPerson, {
+    new: true,
+    runValidators: true,
+    context: 'query'
+  })
+    .then(updated => {
+      response.json(updated)
     })
     .catch(error => next(error))
 })
@@ -86,6 +89,11 @@ app.delete('/api/persons/:id', (req, res, next) => {
 const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'unknown endpoint' })
 }
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'build', 'index.html'))
+})
+
 app.use(unknownEndpoint)
 
 app.use(errorHandler)

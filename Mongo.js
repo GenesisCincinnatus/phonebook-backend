@@ -34,7 +34,7 @@ if (args.length === 3) {
       mongoose.connection.close()
     })
 } else if (args.length === 5) {
- 
+
   const name = args[3]
   const number = args[4]
 

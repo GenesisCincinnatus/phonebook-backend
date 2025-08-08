@@ -1,5 +1,5 @@
 const errorHandler = (error, req, res, next) => {
-  
+
   console.error(error.message)
 
   if (error.name === 'CastError') {
